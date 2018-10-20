@@ -8,11 +8,6 @@ The pipeline is developed based on  a popular workflow framework [Nextflow](http
 
 
 
-
-## Installation
-[Nextflow](https://github.com/nextflow-io/nextflow)  
-LncPipe is implemented with Nextflow pipeline management system. To run LncPipe. [Nextflow](https://github.com/nextflow-io/nextflow) should be pre-installed at  POSIX compatible system (Linux, Solaris, OS X, etc), It requires BASH and Java 7 or higher to be installed. We do not recommend running the pipes in the Windows since most of bioinformatic tools are not supported.
-
 ## Quick start
 
 
