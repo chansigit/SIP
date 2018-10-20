@@ -8,24 +8,6 @@ The pipeline is developed based on  a popular workflow framework [Nextflow](http
 
 
 
-## Table of Contents
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Schematic diagram](#schematic-diagram)
-- [Installation](#installation-and-quick-start)
-- [Run Docker](#run-docker)
-- [Run with example data](https://github.com/likelet/LncPipeTestData)
-- [Interactive reports](#interactive-reports)
-- [Parameters](#parameters)
-- [FAQ](#faq)
-- [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
-- [License](#license)
-
-## Schematic diagram
-
 
 ## Installation
 [Nextflow](https://github.com/nextflow-io/nextflow)  
