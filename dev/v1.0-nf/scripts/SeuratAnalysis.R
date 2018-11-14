@@ -8,6 +8,12 @@ option_list = list(
     type = "character",
     default = NULL, help = "Dataset file path"
   ),
+    
+  make_option(
+    c("--output"),
+    type = "character",
+    default = ".", help = "Output directory"
+  ),
   
   make_option(
     c("--mincells"),
@@ -182,7 +188,7 @@ cellhub <- AddMetaData(object = cellhub,
 # For non-UMI data, nUMI represents the sum of the non-normalized values within a cell 
 # Here we plot the violin plots for nGene, nUMI, and Mitochondrial percentages.
 # ----------------------------------------------------------------------------------------
-pdf("CellQC.pdf")
+pdf(paste(params$output,"/CellQC.pdf", sep=""))
 par(mfrow = c(2, 2))
 par(mar = c(4, 4, 1, 8) + 0.1)
 VlnPlot(object = cellhub, features.plot = c("nGene", "nUMI", "MitoGeneRatio"), nCol = 2)
@@ -236,14 +242,14 @@ cellhub <- NormalizeData(
 ##                                ...
 ##        z-score([gene19991.var, gene19992.var,..., gene20000.var])    
 # ----------------------------------------------------------------------------------------
-pdf("MeanDispersionPlot.pdf")
+pdf(paste(params$output,"/MeanDispersionPlot.pdf",sep=""))
 cellhub <- FindVariableGenes(object = cellhub,  
                              mean.function = ExpMean, dispersion.function = LogVMR, 
                              x.low.cutoff = 0.0125, x.high.cutoff = 3, y.cutoff = 0.5,
                              do.plot=TRUE, plot.both=FALSE, do.text=FALSE, contour.lwd=0.5, contour.col="red" ,contour.lty = 3, cex.use=0.1                       
 )
 dev.off()
-print(paste0("VarGene#=",length(x=cellhub@var.genes)))
+print(paste0("Number of VarGenes=",length(x=cellhub@var.genes)))
 #par(mfrow = c(1, 2))
 #GenePlot(object = cellhub, gene1 = "nUMI", gene2 = "MitoGeneRatio")
 #GenePlot(object = cellhub, gene1 = "nUMI", gene2 = "nGene")
@@ -266,7 +272,7 @@ cellhub <- ScaleData(object = cellhub,  do.cpp=TRUE, do.par=TRUE,
 cellhub <- RunPCA(object   = cellhub, pc.genes = cellhub@var.genes, 
                   do.print = FALSE, pcs.print = 1:12, genes.print = 10)
 
-pdf("VizPCA.pdf")
+pdf(paste(params$output,"/VizPCA.pdf",sep=""))
 par(mar = c(4, 8, 1, 2) + 0.1)
 VizPCA(object = cellhub, pcs.use =1:6, nCol=2)
 VizPCA(object = cellhub, pcs.use =7:12, nCol=2)
@@ -294,7 +300,7 @@ cellhub <- FindClusters(object=cellhub, save.SNN=TRUE,
 
 groupinfo <- as.data.frame(cellhub@ident)
 #groupinfo
-write.table(groupinfo, "GroupInfo.tsv", sep="\t", col.names=NA)
+write.table(groupinfo, paste(params$output,"/GroupInfo.tsv",sep=""), sep="\t", col.names=NA)
 
 
 
@@ -307,11 +313,11 @@ write.table(groupinfo, "GroupInfo.tsv", sep="\t", col.names=NA)
 cellhub <- RunTSNE(object = cellhub, dims.use = 1:12, do.fast = TRUE,
                    perplexity= params$tsneperp)
 
-pdf("tSNE.pdf")
+pdf(paste(params$output,"/tSNE.pdf",sep=""))
 TSNEPlot(object=cellhub)#
 dev.off()
 
-save(cellhub, file="SeuratObjectSerialized.Robj")
+save(cellhub, file=paste(params$output,"/SeuratObjectSerialized.Robj",sep=""))
 
 # ----------------------------------------------------------------------------------------
 #                           Find Marker Genes
@@ -337,9 +343,9 @@ topDEGenes <- markerGenes %>% group_by(cluster) %>% top_n(params$DEGeneKept, avg
 vizDEGenes <- markerGenes %>% group_by(cluster) %>% top_n(params$DEGeneViz,  avg_logFC)
 vizDEGenes <- as.vector(vizDEGenes[["gene"]])
 
-write.table(topDEGenes, "DE_Genes.tsv", sep="\t", col.names=NA)
+write.table(topDEGenes, paste(params$output,"/DE_Genes.tsv",sep=""), sep="\t", col.names=NA)
 
-pdf("DE_Genes_ViolinPlot.pdf")
+pdf(paste(params$output,"/DE_Genes_ViolinPlot.pdf",sep=""))
 VlnPlot(
   object = cellhub, 
   features.plot = vizDEGenes, 
@@ -347,7 +353,7 @@ VlnPlot(
 )
 dev.off()
 
-pdf("DE_Genes_FeaturePlot.pdf")
+pdf(paste(params$output,"/DE_Genes_FeaturePlot.pdf",sep=""))
 FeaturePlot(
   object = cellhub, 
   features.plot = vizDEGenes, 
@@ -357,7 +363,7 @@ FeaturePlot(
 )
 dev.off()
 
-pdf("DE_Genes_Heatmap.pdf")
+pdf(paste(params$output,"/DE_Genes_Heatmap.pdf",sep=""))
 DoHeatmap(object = cellhub, 
           genes.use = vizDEGenes, 
           slim.col.label = TRUE, remove.key = TRUE
