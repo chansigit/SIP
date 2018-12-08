@@ -254,9 +254,9 @@ process Quant{
     file("*_quant*") into QuantResultDir
 
     script:
-    def paired= readPath instanceof Path
+    def single= readPath instanceof Path
 
-    if (!paired){
+    if (single){
         //cprintln("red","yellow", cellID)
         layout=cellID+" single-end"
         //println ">>"+cellID+": quantifying single-end reads"
