@@ -1,0 +1,13 @@
+# Settings reported in the paper's Results (section 3) for the GSE38495 subset (8 hESC + 19 LNCaP).
+# nextflow run main.nf -profile singularity -params-file paper/gse38495.yaml \
+#   --cellhome <dir>/cells --gtf <dir>/ref/Homo_sapiens.GRCh38.115.gtf.gz \
+#   --transcript_fasta <dir>/ref/Homo_sapiens.GRCh38.cdna.all.fa.gz
+readqc: fastp
+quant: salmon
+quant_unit: count
+using_seurat: true
+tsne_perplexity: 5     # "perplexity parameter = 5
+tsne_dims: 2           #  and first two PCA dimension"
+cluster_dims: 10       # "first 10 principle components
+resolution: 1.04       #  and a resolution parameter = 1.04"
+heatmap_genes: 15      # "top 15 genes with high fold changes"
