@@ -26,6 +26,7 @@ What is fixed:
 | Parameters | `paper/gse38495.yaml` and the command lines in `run.sh` |
 | Randomness | `set.seed(1)` in the R scripts; salmon 2.x quantification is deterministic; the strandness probe uses the alphabetically first cell |
 
-`expected.md5` (added once two independent runs have been compared) lists the outputs that came out identical in two independent runs: the expression matrices, cluster
-assignments, marker tables, pseudotime, cell QC metrics and the RSeQC result. PDFs and HTML reports embed creation
+`expected.md5` lists the 188 outputs that came out identical in independent runs on different nodes: salmon
+quantifications, fastp reports, expression matrices, cluster assignments, marker tables, pseudotime, cell QC
+metrics, the StringTie assembly and the RSeQC results. PDFs and HTML reports embed creation
 dates and are not compared.

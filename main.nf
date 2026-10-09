@@ -420,7 +420,7 @@ workflow {
             HTSEQ(bam, gtf, strand); tables = HTSEQ.out; cnt_qc = HTSEQ.out
         } else {
             STRINGTIE(bam, gtf, strand)
-            STRINGTIE_MERGE(STRINGTIE.out.collect(), gtf)
+            STRINGTIE_MERGE(STRINGTIE.out.collect(sort: { a, b -> a.name <=> b.name }), gtf)   // fixed order: the command line is written into merged.gtf
             STRINGTIE_ABUND(bam, STRINGTIE_MERGE.out, strand)
             tables = STRINGTIE_ABUND.out; cnt_qc = channel.empty()
         }

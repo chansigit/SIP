@@ -7,7 +7,8 @@ tool <- a[1]; unit <- a[2]; files <- sort(a[-(1:2)])
 read1 <- function(f) switch(tool,
     featurecounts = { d <- read.delim(f, comment.char = "#"); setNames(d[[7]], d$Geneid) },
     htseq = { d <- read.delim(f, header = FALSE); d <- d[!startsWith(d$V1, "__"), ]; setNames(d$V2, d$V1) },
-    stringtie = { d <- read.delim(f, check.names = FALSE); tapply(d[[toupper(unit)]], d[["Gene ID"]], sum) })
+    stringtie = { d <- read.delim(f, check.names = FALSE)   # fixed row order, so the floating-point sums are reproducible
+                  d <- d[order(d[["Gene ID"]], d[[toupper(unit)]]), ]; tapply(d[[toupper(unit)]], d[["Gene ID"]], sum) })
 
 cols <- lapply(files, read1)
 genes <- sort(unique(unlist(lapply(cols, names))))
@@ -17,6 +18,8 @@ write.table(m, paste0("gene_", unit, ".tsv"), sep = "\t", quote = FALSE, col.nam
 
 if (tool == "stringtie") {   # merged-assembly gene ids (MSTRG.*) -> reference gene names
     d <- do.call(rbind, lapply(files, function(f) read.delim(f, check.names = FALSE)[, 1:2]))
-    d <- d[d[[2]] != "-" & !duplicated(d[[1]]), ]
+    d <- d[d[[2]] != "-", ]
+    d <- d[order(d[[1]], d[[2]]), ]   # StringTie row order varies between runs; sort before keeping one name per id
+    d <- d[!duplicated(d[[1]]), ]
     write.table(d, "genes.tsv", sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
 }
